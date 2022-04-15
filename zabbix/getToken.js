@@ -1,8 +1,6 @@
 const getToken = (user, password, done) => {
-    if (done == null) throw Error("callback not provided!");
-
     const unirest = require('unirest');
-    const req = unirest('POST', 'http://home49171.thddns.net:7979/api_jsonrpc.php')
+    const req = unirest('POST', process.env.API_ENDPOINT)
         .headers({
             'Content-Type': 'application/json'
         })
@@ -18,7 +16,11 @@ const getToken = (user, password, done) => {
         }))
         .end((res) => {
             if (res.error) done(res.error);
-            else done(null, res.raw_body);
+            else {
+                const json = JSON.parse(res.raw_body);
+                const token = json.result;
+                done(null, token);
+            }
         });
 }
 
