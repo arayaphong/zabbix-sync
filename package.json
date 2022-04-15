@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/arayaphong/zabbix-sync#readme",
   "dependencies": {
+    "mariadb": "^3.0.0",
     "unirest": "^0.6.0"
   }
 }

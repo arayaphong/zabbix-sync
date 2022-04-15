@@ -21,7 +21,7 @@ const getHosts = (token, done) => {
             else {
                 const json = JSON.parse(res.raw_body);
                 const result = json.result;
-                done(result);
+                done(null, result);
             }
         });
 
