@@ -1,8 +1,17 @@
 const { getToken } = require("./zabbix/getToken");
 const { getHosts } = require("./zabbix/getHosts");
-const { addHosts } = require("./mariadb/addHosts");
 const { getCPUUtilHist } = require("./zabbix/getCPUUtilHist");
-getToken("Admin", "zabbix", (err, token) => {
+const { addHosts } = require("./mariadb/addHosts");
+
+
+const updateCpuUtils = (hostid, done) => {
+
+}
+
+const config = require("./config");
+const user = config.zabbix.user;
+const password = config.zabbix.password;
+getToken(user, password, (err, token) => {
     if (err) console.error(err);
     else getHosts(token, (err, hosts) => {
         if (err) console.error(err);
@@ -12,6 +21,7 @@ getToken("Admin", "zabbix", (err, token) => {
                 console.log("Update hosts status: " + result);
                 hosts.forEach(host => {
                     const id = host.hostid;
+
                     getCPUUtilHist(token, id, 0, (err, data) => {
                         console.log("CPU (" + id + ") : " + data.length + " rows");
                     });

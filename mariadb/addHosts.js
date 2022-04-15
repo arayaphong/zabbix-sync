@@ -1,13 +1,7 @@
+const config = require("../config");
 const addHosts = (hosts, done) => {
-    const mariadb = require('mariadb');
-    const pool = mariadb.createPool({
-        host: "home49171.thddns.net",
-        port: 7977,
-        user: 'admin',
-        password: 'admin',
-        database: "monitordb",
-        connectionLimit: 5
-    });
+    const mariadb = require("mariadb");
+    const pool = mariadb.createPool(config.db);
     async function sqlInsert(conn, done) {
         const dbHosts = await conn.query("SELECT host_id FROM hosts;");
         const dbHodtIds = dbHosts.map(host => host.host_id);

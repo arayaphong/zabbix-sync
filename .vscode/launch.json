@@ -11,9 +11,6 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "env": {
-                "API_ENDPOINT": "http://home49171.thddns.net:7979/api_jsonrpc.php"
-            },
             "program": "${workspaceFolder}/index.js"
         }
     ]

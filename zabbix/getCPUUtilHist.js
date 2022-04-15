@@ -1,10 +1,9 @@
-const API_ENDPOINT = process.env.API_ENDPOINT;
+const config = require("../config");
+
 const getItemId = (token, hostId, done) => {
-    const unirest = require('unirest');
-    const req = unirest('POST', API_ENDPOINT)
-        .headers({
-            'Content-Type': 'application/json'
-        })
+    const unirest = require("unirest");
+    unirest("POST", config.zabbix.api)
+        .headers(config.headers)
         .send(JSON.stringify({
             "jsonrpc": "2.0",
             "method": "item.get",
@@ -23,7 +22,7 @@ const getItemId = (token, hostId, done) => {
                 },
                 "sortfield": "name"
             },
-            "auth": "cb8c6e18cabce79cfa96ca21fa4034f0",
+            "auth": token,
             "id": 1
         }))
         .end((res) => {
@@ -40,10 +39,8 @@ const getHistory = (token, itemId, timeFrom, done) => {
     if (!itemId) return done(null, []);
 
     const unirest = require('unirest');
-    const req = unirest('POST', API_ENDPOINT)
-        .headers({
-            'Content-Type': 'application/json'
-        })
+    unirest("POST", config.zabbix.api)
+        .headers(config.headers)
         .send(JSON.stringify({
             "jsonrpc": "2.0",
             "method": "history.get",

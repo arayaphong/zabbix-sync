@@ -1,9 +1,8 @@
+const config = require("../config");
 const getHosts = (token, done) => {
-    const unirest = require('unirest');
-    const req = unirest('POST', process.env.API_ENDPOINT)
-        .headers({
-            'Content-Type': 'application/json'
-        })
+    const unirest = require("unirest");
+    unirest("POST", config.zabbix.api)
+        .headers(config.headers)
         .send(JSON.stringify({
             "jsonrpc": "2.0",
             "method": "host.get",
