@@ -37,7 +37,6 @@ const getItemId = (token, hostId, done) => {
 
 const getHistory = (token, itemId, timeFrom, done) => {
     if (!itemId) return done(null, []);
-
     const unirest = require('unirest');
     unirest("POST", config.zabbix.api)
         .headers(config.headers)
@@ -45,13 +44,13 @@ const getHistory = (token, itemId, timeFrom, done) => {
             "jsonrpc": "2.0",
             "method": "history.get",
             "params": {
-                "output": "extend",
+                "output": ["clock", "value"],
                 "history": 0,
                 "itemids": itemId,
                 "sortfield": "clock",
-                "sortorder": "DESC",
+                //"sortorder": "DESC",
                 "time_from": timeFrom,
-                "limit": 100
+                "limit": 11
             },
             "auth": token,
             "id": 1
@@ -67,6 +66,7 @@ const getHistory = (token, itemId, timeFrom, done) => {
 }
 
 const getCPUUtilHist = (token, hostId, timeFrom, done) => {
+    console.log(hostId + " Time from " + timeFrom);
     getItemId(token, hostId, (err, itemId) => {
         if (err) done(err);
         else getHistory(token, itemId, timeFrom, (err, data) => {
