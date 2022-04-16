@@ -1,14 +1,15 @@
 const { getToken } = require("./zabbix/getToken");
 const { getHosts } = require("./zabbix/getHosts");
-const { getCPUUtilHist } = require("./zabbix/getCPUUtilHist");
-const { dbUtil: createDB } = require("./mariadb/dbUtil");
-const db = createDB();
+const { getCpuUtilz } = require("./zabbix/getCpuUtilz");
+const { getMemFree } = require("./zabbix/getMemFree");
+const { dbUtil } = require("./mariadb/dbUtil");
+const db = dbUtil();
 
 const updateCpuUtils = (token, hostId, clock, done) => {
     const next = (err, res) => {
         if (res.next == null) return done(err, res);
         if (err) done(err);
-        else getCPUUtilHist(token, hostId, res.next, (err, data) => {
+        else getCpuUtilz(token, hostId, res.next, (err, data) => {
             if (err) done(err);
             else {
                 data = data.filter(d => parseInt(d.clock) != res.next);
@@ -45,7 +46,6 @@ const updateMemories = (token, hostId, clock, done) => {
 }
 
 const config = require("./config");
-const { getMemFree } = require("./zabbix/getMemFree");
 const user = config.zabbix.user;
 const password = config.zabbix.password;
 getToken(user, password, (err, token) => {
