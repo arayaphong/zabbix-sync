@@ -12,11 +12,10 @@ config.db = {
     user: "admin",
     password: "admin",
     database: "monitordb",
-    connectionLimit: 5
-}
-config.cpu = {
-    loads: "cpu_loads",
-    utilizations: "cpu_utilizations"
+    connectionLimit: 5,
+
+    cpuUtilizations: "cpu_utilizations",
+    memoryAvailable: "memory_available"
 }
 
 module.exports = config;
