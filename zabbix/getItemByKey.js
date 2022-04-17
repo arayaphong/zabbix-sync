@@ -26,7 +26,8 @@ const getItemByKeys = (token, hostId, key, sKey, done) => {
             if (res.error) done(res.error);
             else {
                 const json = JSON.parse(res.raw_body);
-                done(null, json.result);
+                if (json.error) done(json.error);
+                else done(null, json.result);
             }
         });
 }

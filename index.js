@@ -8,7 +8,10 @@ sync.hosts((err, result) => {
         const hosts = result.hosts;
         hosts.forEach(host => {
             const hostId = host.hostid;
-            const done = (err, result) => err ? console.error(err) : console.log(result);
+            const done = (err, result) => {
+                if (err) console.error(err);
+                else console.log(result)
+            }
             const update = (res) => console.log(res);
             updater.cpu(hostId, update, done);
             updater.ram(hostId, update, done);
