@@ -15,7 +15,8 @@ config.db = {
     connectionLimit: 5,
 
     cpuUtilizations: "cpu_utilizations",
-    memoryAvailable: "memory_available"
+    memoryAvailable: "memory_available",
+    spaceUtilizations: "space_utilizations"
 }
 
 module.exports = config;

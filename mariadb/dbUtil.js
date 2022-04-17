@@ -62,8 +62,9 @@ const dbUtil = () => {
                 })
                 .catch(err => done(err));
         },
-        addCPUUtilHist: (data, hostId, done) => addRecord(pool, data, hostId, "cpu_utilizations", done),
-        addMemFreeHist: (data, hostId, done) => addRecord(pool, data, hostId, "memory_available", done)
+        addCPUUtilHist: (data, hostId, done) => addRecord(pool, data, hostId, config.db.cpuUtilizations, done),
+        addMemFreeHist: (data, hostId, done) => addRecord(pool, data, hostId, config.db.memoryAvailable, done),
+        addSpaceUtilHist: (data, hostId, done) => addRecord(pool, data, hostId, config.db.spaceUtilizations, done)
     });
 }
 

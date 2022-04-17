@@ -12,6 +12,7 @@ sync.hosts((err, result) => {
             const update = (res) => console.log(res);
             updater.cpu(hostId, update, done);
             updater.ram(hostId, update, done);
+            updater.disk(hostId, update, done);
         });
     }
 });

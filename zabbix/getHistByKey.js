@@ -1,8 +1,18 @@
 const config = require("../config");
-const { getItemByKey } = require("./getItemByKey");
+const { getItemByKey, getItemBySearchKey } = require("./getItemByKey");
 
-const getItemId = (token, hostId, key, done) => {
+const getItemIdByKey = (token, hostId, key, done) => {
     getItemByKey(token, hostId, key, (err, result) => {
+        if (err) done(err);
+        else {
+            const itemId = (result.length > 0 ? result[0].itemid : 0);
+            done(null, itemId);
+        }
+    });
+}
+
+const getItemIdBySearchKey = (token, hostId, key, done) => {
+    getItemBySearchKey(token, hostId, key, (err, result) => {
         if (err) done(err);
         else {
             const itemId = (result.length > 0 ? result[0].itemid : 0);
@@ -41,7 +51,7 @@ const getHistory = (token, itemId, timeFrom, done) => {
 }
 
 const getHistByKey = (token, hostId, key, timeFrom, done) => {
-    getItemId(token, hostId, key, (err, itemId) => {
+    getItemIdByKey(token, hostId, key, (err, itemId) => {
         if (err) done(err);
         else getHistory(token, itemId, timeFrom, (err, data) => {
             if (err) done(err);
@@ -50,4 +60,17 @@ const getHistByKey = (token, hostId, key, timeFrom, done) => {
     });
 }
 
-module.exports.getHistByKey = getHistByKey;
+const getHistBySearchKey = (token, hostId, key, timeFrom, done) => {
+    getItemIdBySearchKey(token, hostId, key, (err, itemId) => {
+        if (err) done(err);
+        else getHistory(token, itemId, timeFrom, (err, data) => {
+            if (err) done(err);
+            else done(null, data);
+        });
+    });
+}
+
+module.exports = {
+    getHistByKey: getHistByKey,
+    getHistBySearchKey: getHistBySearchKey
+}

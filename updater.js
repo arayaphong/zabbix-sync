@@ -1,5 +1,5 @@
 const config = require("./config");
-const { getHistByKey } = require("./zabbix/getHistByKey");
+const { getHistByKey, getHistBySearchKey } = require("./zabbix/getHistByKey");
 const updater = (db, token) => {
     const getCpuUtilz = (token, hostId, timeFrom, done) => getHistByKey(token, hostId, "system.cpu.util", timeFrom, done);
     const updateCpuUtils = (token, hostId, clock, update, done) => {
@@ -43,7 +43,28 @@ const updater = (db, token) => {
                 }
             });
         }
-
+        next(null, { next: clock });
+    }
+    const getSpaceUtilz = (token, hostId, timeFrom, done) => getHistBySearchKey(token, hostId, "vfs.fs.size", timeFrom, done);
+    const updateSpaces = (token, hostId, clock, update, done) => {
+        const next = (err, res) => {
+            if (res.next == null) return done(err, res);
+            if (err) done(err);
+            else getSpaceUtilz(token, hostId, res.next, (err, data) => {
+                if (err) done(err);
+                else {
+                    data = data.filter(d => parseInt(d.clock) != res.next);
+                    if (data.length > 0) db.addSpaceUtilHist(data, hostId, (err, res) => {
+                        if (err) done(err);
+                        else {
+                            update(res);
+                            updateSpaces(token, hostId, res.next, update, next);
+                        }
+                    });
+                    else done(null, { hostId: hostId, key: "vfs.fs.size", finished: true });
+                }
+            });
+        }
         next(null, { next: clock });
     }
 
@@ -55,6 +76,10 @@ const updater = (db, token) => {
         ram: (hostId, update, done) => db.getLastClock(config.db.memoryAvailable, hostId, (err, clock) => {
             if (err) done(err);
             else updateMemories(token, hostId, clock, update, done);
+        }),
+        disk: (hostId, update, done) => db.getLastClock(config.db.spaceUtilizations, hostId, (err, clock) => {
+            if (err) done(err);
+            else updateSpaces(token, hostId, clock, update, done);
         })
     }
 }
