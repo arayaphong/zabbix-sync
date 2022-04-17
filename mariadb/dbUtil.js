@@ -7,9 +7,8 @@ const addRecord = (pool, data, hostId, table, done) => {
             const sql = "INSERT INTO " + table + " VALUES " + values.join(",") + ";";
             conn.query(sql)
                 .then((res) => {
-                    done(null, { next: data[data.length - 1].clock });
                     conn.end();
-                    console.log(res);
+                    done(null, { res: res, next: data[data.length - 1].clock });
                 })
                 .catch(err => {
                     conn.end();
@@ -22,7 +21,6 @@ const addRecord = (pool, data, hostId, table, done) => {
 }
 const dbUtil = () => {
     const pool = mariadb.createPool(config.db);
-
     return ({
         getLastClock: (table, hostId, done) => {
             pool.getConnection()

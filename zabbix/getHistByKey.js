@@ -41,7 +41,6 @@ const getHistory = (token, itemId, timeFrom, done) => {
 }
 
 const getHistByKey = (token, hostId, key, timeFrom, done) => {
-    console.log(hostId + " Time from " + timeFrom);
     getItemId(token, hostId, key, (err, itemId) => {
         if (err) done(err);
         else getHistory(token, itemId, timeFrom, (err, data) => {
