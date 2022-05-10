@@ -1,0 +1,21 @@
+{
+    "headers": {
+        "Content-Type": "application/json"
+    },
+    "zabbix": {
+        "user": "Admin",
+        "password": "zabbix",
+        "api": "http://home49171.thddns.net:7979/api_jsonrpc.php"
+    },
+    "db": {
+        "host": "home49171.thddns.net",
+        "port": 7977,
+        "user": "admin",
+        "password": "admin",
+        "database": "monitordb",
+        "connectionLimit": 5,
+        "cpuUtilizations": "cpu_utilizations",
+        "memoryAvailable": "memory_available",
+        "spaceUtilizations": "space_utilizations"
+    }
+}

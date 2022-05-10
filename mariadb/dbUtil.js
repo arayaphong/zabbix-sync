@@ -1,4 +1,6 @@
-const config = require("../config");
+const fs = require('fs');
+const rawdata = fs.readFileSync('./config.json');
+const config = JSON.parse(rawdata);
 const mariadb = require("mariadb");
 const addRecord = (pool, data, hostId, table, done) => {
     pool.getConnection()
@@ -39,16 +41,21 @@ const dbUtil = () => {
                 .catch(err => done(err));
         },
         addHosts: (hosts, done) => {
+            console.log(hosts);
+            console.log("Now I got hosts");
             pool.getConnection()
                 .then(conn => {
+                    console.log("Now I got DB connection");
                     conn.query("SELECT host_id FROM hosts;")
                         .then((res) => {
-                            const dbHodtIds = res.map(host => host.host_id);
-                            hosts = hosts.filter(host => !dbHodtIds.includes(parseInt(host.hostid)));
+                            console.log("Now I got DB query results", res);
+                            const dbHostIds = res.map(host => host.host_id);
+                            hosts = hosts.filter(host => !dbHostIds.includes(parseInt(host.hostid)));
                             if (hosts.length < 1) return done(null, { affectedRows: 0, insertId: 0, warningStatus: 0 });
 
                             const values = hosts.map(host => "(" + host.hostid + ", '" + host.name + "', NOW())");
                             const sql = "INSERT INTO hosts VALUES" + values.join(",") + ";"
+                            console.log(sql);
                             return conn.query(sql);
                         })
                         .then((res) => {

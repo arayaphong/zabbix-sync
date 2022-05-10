@@ -1,4 +1,6 @@
-const config = require("./config");
+const fs = require('fs');
+const rawdata = fs.readFileSync('./config.json');
+const config = JSON.parse(rawdata);
 const unirest = require('unirest');
 const { dbUtil } = require("./mariadb/dbUtil");
 const { updater } = require("./updater");
